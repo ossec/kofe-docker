@@ -1,0 +1,26 @@
+:modulename: ossec
+:has-dashboards: false
+
+== Atomicorp module
+
+This module prepares Elasticsearch for ingesting OSSEC alerts and, optionally, OSSEC archives.
+
+include::../include/what-happens.asciidoc[]
+
+[float]
+=== Compatibility
+
+Compatible with Atomic OSSEC 4.x and Elastic stack 7.x. The module was tested with Atomicorp OSSEC 4.2 and Elastic stack 7.9. 
+
+include::../include/running-modules.asciidoc[]
+
+[float]
+==== `{fileset}` log fileset settings
+
+include::../include/var-paths.asciidoc[]
+
+:has-dashboards!:
+
+:fileset_ex!:
+
+:modulename!:

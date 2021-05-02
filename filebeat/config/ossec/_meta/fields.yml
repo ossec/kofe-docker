@@ -1,0 +1,9 @@
+- key: ossec
+  title: "ossec"
+  description: >
+    ossec Module
+  fields:
+    - name: ossec
+      type: group
+      description: >
+      fields:

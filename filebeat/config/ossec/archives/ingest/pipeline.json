@@ -1,0 +1,9 @@
+{
+  "description": "OSSEC Archive events",
+  "processors": [
+    { "json" : { "field" : "message", "add_to_root": true } }
+  ],
+  "on_failure" : [{
+    "drop" : { }
+  }]
+}

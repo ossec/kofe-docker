@@ -1,0 +1,91 @@
+version: '3.2'
+
+services:
+  elasticsearch:
+    build:
+      context: elasticsearch/
+      args:
+        ELK_VERSION: $ELK_VERSION
+    volumes:
+      - type: bind
+        source: ./elasticsearch/config/elasticsearch.yml
+        target: /usr/share/elasticsearch/config/elasticsearch.yml
+        read_only: true
+      - type: volume
+        source: elasticsearch
+        target: /usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+      ELASTIC_PASSWORD: changeme
+      # Use single node discovery in order to disable production mode and avoid bootstrap checks.
+      # see: https://www.elastic.co/guide/en/elasticsearch/reference/current/bootstrap-checks.html
+      discovery.type: single-node
+    restart: unless-stopped
+    networks:
+      - elk
+
+  kibana:
+    build:
+      context: kibana/
+      args:
+        ELK_VERSION: $ELK_VERSION
+    volumes:
+      - type: bind
+        source: ./kibana/config/kibana.yml
+        target: /usr/share/kibana/config/kibana.yml
+        read_only: true
+    ports:
+      - "5601:5601"
+    restart: unless-stopped
+    networks:
+      - elk
+    depends_on:
+      - elasticsearch
+
+  filebeat:
+    build:
+      context: filebeat/
+      args:
+        ELK_VERSION: $ELK_VERSION
+    volumes:
+      - ossec-data:/var/ossec/data/
+      - type: bind
+        source: ./filebeat/config/filebeat.yml
+        target: /usr/share/filebeat/filebeat.yml
+        read_only: true
+      - type: bind
+        source: ./filebeat/config/ossec-template.json
+        target: /usr/share/filebeat/config/ossec-template.json
+        read_only: true
+      - type: bind
+        source: ./filebeat/config/ossec/
+        target: /usr/share/filebeat/module/ossec/
+        read_only: true
+    restart: unless-stopped
+    networks:
+      - elk
+    depends_on:
+      - elasticsearch
+
+  ossec-server:
+    build:
+      context: ossec/
+    volumes:
+      - ossec-data:/var/ossec/data/
+    ports:
+      - "1515:1515"
+      - "1514:1514/udp"
+    restart: unless-stopped
+    networks:
+      - elk
+networks:
+  elk:
+    driver: bridge
+
+volumes:
+ elasticsearch:
+   external: false
+ ossec-data:
