@@ -352,7 +352,7 @@ elasticsearch:
 Special thanks to:
 
 * The creators of [docker-elk](https://github.com/deviantony/docker-elk)
-* Scott Shinn for creating [ossec-docker](https://github/ossec/ossec-docker)
+* Scott Shinn for creating [ossec-docker](https://github.com/ossec/ossec-docker)
 
 [elk-stack]: https://www.elastic.co/what-is/elk-stack
 [xpack]: https://www.elastic.co/what-is/open-x-pack
